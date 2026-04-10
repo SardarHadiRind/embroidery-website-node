@@ -48,30 +48,36 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// DEBUG: Log all environment variables
-console.log("=== ENVIRONMENT VARIABLES CHECK ===");
-console.log("MONGODB_URI:", process.env.MONGODB_URI ? "SET ✓" : "NOT SET ✗");
-console.log("DB_NAME:", process.env.DB_NAME || "NOT SET");
-console.log("JWT_SECRET:", process.env.JWT_SECRET ? "SET ✓" : "NOT SET ✗");
-console.log("PORT:", process.env.PORT || "NOT SET");
-console.log("===================================");
-
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME || "embroideryDB";
 
-if (!MONGODB_URI) {
-    console.error("❌ CRITICAL: MONGODB_URI environment variable is missing!");
-    console.error("Please add it in Railway Variables tab");
-} else {
-    console.log("Attempting to connect to MongoDB...");
-    mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
-        .then(() => console.log("✅✅✅ MongoDB Connected Successfully! ✅✅✅"))
-        .catch(err => console.error("❌ MongoDB Error:", err.message));
-}
+console.log("=== MONGODB CONNECTION ===");
+console.log("URI exists:", !!MONGODB_URI);
+console.log("Database:", DB_NAME);
+
+mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
+    .then(() => {
+        console.log("✅✅✅ MONGO DB CONNECTED! ✅✅✅");
+        console.log("Your database is ready!");
+    })
+    .catch(err => {
+        console.error("❌ MongoDB Error:", err.message);
+    });
+
+// Test route to check database status
+app.get("/api/health", (req, res) => {
+    const dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+    res.json({ 
+        status: "ok", 
+        database: dbStatus,
+        message: "Embroidery Store API is running"
+    });
+});
 
 // Start Server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📍 Visit: https://embroidery-website-node-production.up.railway.app`);
 });
