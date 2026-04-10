@@ -48,36 +48,23 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// MongoDB Connection
+// MongoDB Connection - SIMPLE VERSION
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME || "embroideryDB";
 
-console.log("=== MONGODB CONNECTION ===");
-console.log("URI exists:", !!MONGODB_URI);
-console.log("Database:", DB_NAME);
+console.log("MONGODB_URI exists?", MONGODB_URI ? "YES" : "NO");
 
-mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
-    .then(() => {
-        console.log("✅✅✅ MONGO DB CONNECTED! ✅✅✅");
-        console.log("Your database is ready!");
-    })
-    .catch(err => {
-        console.error("❌ MongoDB Error:", err.message);
-    });
-
-// Test route to check database status
-app.get("/api/health", (req, res) => {
-    const dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
-    res.json({ 
-        status: "ok", 
-        database: dbStatus,
-        message: "Embroidery Store API is running"
-    });
-});
+if (MONGODB_URI) {
+    mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
+        .then(() => console.log("✅ DATABASE CONNECTED!"))
+        .catch(err => console.log("❌ DB Error:", err.message));
+} else {
+    console.log("⚠️ No MONGODB_URI found. Please add it in Railway Variables.");
+}
 
 // Start Server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 Visit: https://embroidery-website-node-production.up.railway.app`);
+    console.log(`🚀 Server on port ${PORT}`);
+    console.log(`🌐 https://embroidery-website-node-production.up.railway.app`);
 });
