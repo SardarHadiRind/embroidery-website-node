@@ -48,22 +48,19 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// MongoDB Connection - FIXED for Railway
+// MongoDB Connection - FIXED (removed deprecated options)
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME || "embroideryDB";
 
 if (!MONGODB_URI) {
-    console.error("❌ MONGODB_URI is not defined in environment variables");
+    console.error("❌ MONGODB_URI is not defined");
     process.exit(1);
 }
 
-mongoose.connect(MONGODB_URI, {
-    dbName: DB_NAME,
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+// Simple connection without deprecated options
+mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
 .then(() => {
-    console.log("✅ MongoDB Connected Successfully to:", DB_NAME);
+    console.log("✅ MongoDB Connected Successfully");
 })
 .catch(err => {
     console.error("❌ MongoDB Connection Error:", err.message);
