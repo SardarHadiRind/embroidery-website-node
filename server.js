@@ -48,21 +48,32 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// MongoDB Connection - Using your exact URL
+// MongoDB Connection - WITH DEBUG LOGGING
+console.log("🔵 Attempting to connect to MongoDB...");
+
 const MONGODB_URI = process.env.MONGODB_URI || "mongodb://mongo:MaQoVzwgTrWvdogTHICmdSndiqBlOzDA@mongodb.railway.internal:27017";
-const DB_NAME = "embroideryDB";
+const DB_NAME = process.env.DB_NAME || "embroideryDB";
+
+console.log("🔵 Using MONGODB_URI:", MONGODB_URI ? "Yes (exists)" : "No (using default)");
+console.log("🔵 Database Name:", DB_NAME);
 
 mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
 .then(() => {
-    console.log("✅ MongoDB Connected Successfully to:", DB_NAME);
+    console.log("✅✅✅ MongoDB Connected Successfully to:", DB_NAME);
 })
 .catch(err => {
-    console.error("❌ MongoDB Connection Error:", err.message);
+    console.error("❌❌❌ MongoDB Connection Error:", err.message);
+    console.error("Full error:", err);
 });
 
 // Start Server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 Login page available`);
+    console.log(`📍 Login page available at: /login.html`);
+});
+
+// Handle process events
+process.on('uncaughtException', (err) => {
+    console.error('Uncaught Exception:', err);
 });
