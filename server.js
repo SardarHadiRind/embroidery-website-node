@@ -48,17 +48,25 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
+// DEBUG: Log all environment variables
+console.log("=== ENVIRONMENT VARIABLES CHECK ===");
+console.log("MONGODB_URI:", process.env.MONGODB_URI ? "SET ✓" : "NOT SET ✗");
+console.log("DB_NAME:", process.env.DB_NAME || "NOT SET");
+console.log("JWT_SECRET:", process.env.JWT_SECRET ? "SET ✓" : "NOT SET ✗");
+console.log("PORT:", process.env.PORT || "NOT SET");
+console.log("===================================");
+
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME || "embroideryDB";
 
-console.log("Starting connection to MongoDB...");
-
 if (!MONGODB_URI) {
-    console.error("ERROR: MONGODB_URI not set!");
+    console.error("❌ CRITICAL: MONGODB_URI environment variable is missing!");
+    console.error("Please add it in Railway Variables tab");
 } else {
+    console.log("Attempting to connect to MongoDB...");
     mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
-        .then(() => console.log("✅ MongoDB Connected!"))
+        .then(() => console.log("✅✅✅ MongoDB Connected Successfully! ✅✅✅"))
         .catch(err => console.error("❌ MongoDB Error:", err.message));
 }
 
