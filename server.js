@@ -48,8 +48,10 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// MongoDB Connection
-mongoose.connect("mongodb://127.0.0.1:27017/embroideryDB")
+// ✅ FIXED: MongoDB Connection - Use Railway variable or fallback to local
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/embroideryDB";
+
+mongoose.connect(MONGODB_URI)
 .then(() => {
     console.log("✅ MongoDB Connected Successfully");
 })
@@ -58,11 +60,11 @@ mongoose.connect("mongodb://127.0.0.1:27017/embroideryDB")
 });
 
 // Start Server
-const PORT = 5000;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`📍 http://localhost:5000/login.html`);
-    console.log(`📋 Admin Panel: http://localhost:5000/admin.html`);
-    console.log(`🛒 Shopping Cart: http://localhost:5000/cart.html`);
-    console.log(`📦 My Orders: http://localhost:5000/orders.html`);
+    console.log(`📍 http://localhost:${PORT}/login.html`);
+    console.log(`📋 Admin Panel: http://localhost:${PORT}/admin.html`);
+    console.log(`🛒 Shopping Cart: http://localhost:${PORT}/cart.html`);
+    console.log(`📦 My Orders: http://localhost:${PORT}/orders.html`);
 });
