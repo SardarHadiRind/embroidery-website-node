@@ -48,23 +48,32 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// MongoDB Connection - WITH DEBUG LOGGING
-console.log("🔵 Attempting to connect to MongoDB...");
-
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://mongo:MaQoVzwgTrWvdogTHICmdSndiqBlOzDA@mongodb.railway.internal:27017";
+// MongoDB Connection - Async/Await version
+const MONGODB_URI = process.env.MONGODB_URI;
 const DB_NAME = process.env.DB_NAME || "embroideryDB";
 
-console.log("🔵 Using MONGODB_URI:", MONGODB_URI ? "Yes (exists)" : "No (using default)");
-console.log("🔵 Database Name:", DB_NAME);
+console.log("🔵 MONGODB_URI exists:", !!MONGODB_URI);
+console.log("🔵 DB_NAME:", DB_NAME);
 
-mongoose.connect(`${MONGODB_URI}/${DB_NAME}`)
-.then(() => {
-    console.log("✅✅✅ MongoDB Connected Successfully to:", DB_NAME);
-})
-.catch(err => {
-    console.error("❌❌❌ MongoDB Connection Error:", err.message);
-    console.error("Full error:", err);
-});
+async function connectDB() {
+    try {
+        if (!MONGODB_URI) {
+            throw new Error("MONGODB_URI is not defined in environment variables");
+        }
+        
+        const fullUrl = `${MONGODB_URI}/${DB_NAME}`;
+        console.log("🔵 Connecting to:", fullUrl.replace(/\/\/[^:]+:[^@]+@/, '//***:***@')); // Hide password in logs
+        
+        await mongoose.connect(fullUrl);
+        console.log("✅✅✅ MongoDB Connected Successfully to:", DB_NAME);
+    } catch (err) {
+        console.error("❌❌❌ MongoDB Connection Error:", err.message);
+        console.error("Full error details:", err);
+    }
+}
+
+// Call the connection function
+connectDB();
 
 // Start Server
 const PORT = process.env.PORT || 8080;
