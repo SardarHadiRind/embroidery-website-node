@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmbroideryStore.pk - Premium Handcrafted Embroidery</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #8B5CF6;
+            --primary-dark: #7C3AED;
+            --secondary: #EC4899;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+        }
+
+        /* Navbar */
+        .navbar {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-decoration: none;
+        }
+
+        .logo i {
+            background: none;
+            -webkit-background-clip: unset;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .cart-icon {
+            position: relative;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -12px;
+            background: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: transform 0.2s;
+        }
+
+        .logout-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-btn {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Categories */
+        .categories {
+            max-width: 1280px;
+            margin: -50px auto 3rem;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .category-card {
+            background: white;
+            padding: 2rem;
+            text-align: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .category-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .category-card h3 {
+            font-size: 1.1rem;
+        }
+
+        /* Products Section */
+        .products-section {
+            max-width: 1280px;
+            margin: 0 auto 4rem;
+            padding: 0 2rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--dark);
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            height: 250px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-image i {
+            font-size: 5rem;
+            color: white;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-category {
+            color: var(--primary);
+            font-size: 0.85rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 0.5rem 0;
+        }
+
+        .product-description {
+            color: #6B7280;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .add-to-cart {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .add-to-cart:hover {
+            transform: scale(1.02);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 3rem 2rem 1rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+        }
+
+        .footer-section p {
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            margin-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            z-index: 1100;
+            animation: slideIn 0.3s ease;
+            display: none;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .section-header {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="/index.html" class="logo">
+                <i class="fas fa-feather-alt"></i> EmbroideryStore.pk
+            </a>
+            <div class="nav-links">
+                <a href="/index.html">Home</a>
+                <a href="#" onclick="filterProducts('all')">Shop</a>
+                <a href="#" onclick="filterProducts('Traditional')">Traditional</a>
+                <a href="#" onclick="filterProducts('Modern')">Modern</a>
+                <a href="/cart.html" class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </a>
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Premium Handcrafted Embroidery</h1>
+            <p>Discover exquisite embroidery designs crafted with love and precision by master artisans. Each piece tells a unique story.</p>
+            <button class="hero-btn" onclick="document.getElementById('products').scrollIntoView({behavior: 'smooth'})">
+                Shop Now <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <div class="categories">
+        <div class="category-card" onclick="filterProducts('all')">
+            <i class="fas fa-border-all"></i>
+            <h3>All Products</h3>
+        </div>
+        <div class="category-card" onclick="filterProducts('Traditional')">
+            <i class="fas fa-landmark"></i>
+            <h3>Traditional</h3>
+        </div>
+        <div class="category-card" onclick="filterProducts('Modern')">
+            <i class="fas fa-brush"></i>
+            <h3>Modern</h3>
+        </div>
+        <div class="category-card" onclick="filterProducts('Custom')">
+            <i class="fas fa-palette"></i>
+            <h3>Custom</h3>
+        </div>
+    </div>
+
+    <!-- Products Section -->
+    <section class="products-section" id="products">
+        <div class="section-header">
+            <h2>Featured Collections</h2>
+            <div class="welcome-text">
+                Welcome, <span id="userName" style="color: var(--primary); font-weight: bold;">Guest</span>
+            </div>
+        </div>
+        <div class="product-grid" id="productsGrid">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p style="margin-top: 1rem;">Loading exquisite products...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3><i class="fas fa-feather-alt"></i> EmbroideryStore.pk</h3>
+                <p>Premium handcrafted embroidery products made with love and tradition.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-pinterest"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <p>About Us<br>Contact<br>Shipping Info<br>Returns</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-envelope"></i> info@embroiderystore.pk<br>
+                <i class="fas fa-phone"></i> +92 300 1234567<br>
+                <i class="fas fa-map-marker-alt"></i> Lahore, Pakistan</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 EmbroideryStore.pk - All Rights Reserved</p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i> <span id="toastMessage">Added to cart!</span>
+    </div>
+
+    <script>
+        let allProducts = [];
+        let currentFilter = 'all';
+
+        // Check login
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+        }
+
+        // Show user name
+        const userData = localStorage.getItem('user');
+        if (userData) {
+            const user = JSON.parse(userData);
+            document.getElementById('userName').textContent = user.name || 'Customer';
+        }
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const response = await fetch('/api/products');
+                allProducts = await response.json();
+                displayProducts(allProducts);
+                updateCartCount();
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('productsGrid').innerHTML = `
+                    <div style="text-align: center; padding: 3rem;">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: var(--danger);"></i>
+                        <p>Error loading products. Please refresh.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Display products
+        function displayProducts(products) {
+            const container = document.getElementById('productsGrid');
+            
+            if (products.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 3rem; grid-column: 1/-1;">
+                        <i class="fas fa-box-open" style="font-size: 3rem; color: var(--primary);"></i>
+                        <p>No products found in this category.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <div class="product-image">
+                        <i class="fas fa-tshirt"></i>
+                        ${product.stock < 5 ? '<span class="product-badge">Low Stock</span>' : ''}
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">${escapeHtml(product.name)}</div>
+                        <div class="product-category">
+                            <i class="fas fa-tag"></i> ${product.category || 'General'}
+                        </div>
+                        <div class="product-price">₨ ${product.price.toLocaleString()}</div>
+                        <div class="product-description">${escapeHtml(product.description.substring(0, 100))}${product.description.length > 100 ? '...' : ''}</div>
+                        <button class="add-to-cart" onclick="addToCart('${product._id}', '${escapeHtml(product.name)}', ${product.price})">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter products
+        function filterProducts(category) {
+            currentFilter = category;
+            if (category === 'all') {
+                displayProducts(allProducts);
+            } else {
+                const filtered = allProducts.filter(p => p.category === category);
+                displayProducts(filtered);
+            }
+        }
+
+        // Add to cart
+        function addToCart(id, name, price) {
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const existing = cart.find(item => item.id === id);
+            
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showToast(`${name} added to cart!`);
+            updateCartCount();
+        }
+
+        // Update cart count
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('cartCount').textContent = count;
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 3000);
+        }
+
+        // Logout
+        function logout() {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        }
+
+        // Escape HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Initialize
+        loadProducts();
+    </script>
+</body>
+</html>
