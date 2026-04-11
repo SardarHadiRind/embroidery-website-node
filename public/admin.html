@@ -159,6 +159,12 @@
             font-family: inherit;
         }
 
+        input[type="file"] {
+            padding: 0.5rem;
+            border: 1px dashed #8B5CF6;
+            background: #faf5ff;
+        }
+
         textarea {
             height: 100px;
             resize: vertical;
@@ -200,6 +206,14 @@
         .product-item:hover {
             background: #f3f4f6;
             transform: translateX(5px);
+        }
+
+        .product-image-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 1rem;
         }
 
         .product-info {
@@ -262,6 +276,18 @@
             color: #999;
         }
 
+        .image-preview {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .image-preview img {
+            max-width: 150px;
+            border-radius: 10px;
+            border: 2px solid #8B5CF6;
+            padding: 5px;
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 grid-template-columns: 1fr;
@@ -285,6 +311,9 @@
             <a href="/admin-orders.html">
                 <i class="fas fa-box"></i> Orders
                 <span id="orderBadge" style="background: #dc3545; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; margin-left: 5px; display: none;">0</span>
+            </a>
+            <a href="/admin-discounts.html">
+                <i class="fas fa-tag"></i> Discounts
             </a>
             <a href="/index.html">
                 <i class="fas fa-store"></i> View Store
@@ -318,7 +347,7 @@
             <div class="card">
                 <h2><i class="fas fa-plus-circle"></i> Add New Product</h2>
                 <div id="message" class="message"></div>
-                <form id="productForm">
+                <form id="productForm" enctype="multipart/form-data">
                     <div class="form-group">
                         <label>Product Name</label>
                         <input type="text" id="name" placeholder="e.g., Traditional Dupatta" required>
@@ -349,6 +378,13 @@
                         <input type="number" id="stock" value="10" min="0">
                     </div>
                     
+                    <div class="form-group">
+                        <label>Product Image</label>
+                        <input type="file" id="image" accept="image/*" onchange="previewImage(event)">
+                        <div id="imagePreview" class="image-preview"></div>
+                        <small style="color: #666;">Supported formats: JPG, PNG, GIF, WEBP (Max 5MB)</small>
+                    </div>
+                    
                     <button type="submit" class="btn-primary">
                         <i class="fas fa-save"></i> Add Product
                     </button>
@@ -367,11 +403,24 @@
 
     <script>
         const API_URL = '/api/products';
+        let uploadedImageUrl = '';
         
         // Check if admin is logged in
         const token = localStorage.getItem('token');
         if (!token) {
             window.location.href = '/login.html';
+        }
+
+        // Preview image before upload
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = `<img src="${reader.result}" alt="Preview">`;
+            }
+            if (event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
         }
 
         // Update stats
@@ -420,11 +469,17 @@
                     const productDiv = document.createElement('div');
                     productDiv.className = 'product-item';
                     productDiv.innerHTML = `
-                        <div class="product-info">
-                            <div class="product-name">${escapeHtml(product.name)}</div>
-                            <div class="product-price">₨ ${product.price.toLocaleString()}</div>
-                            <div class="product-desc">${escapeHtml(product.description.substring(0, 60))}${product.description.length > 60 ? '...' : ''}</div>
-                            <small style="color: #999;">Stock: ${product.stock || 10} | ${product.category || 'General'}</small>
+                        <div style="display: flex; align-items: center; flex: 1;">
+                            ${product.imageUrl && product.imageUrl !== '/uploads/default.jpg' ? 
+                                `<img src="${product.imageUrl}" class="product-image-preview" onerror="this.src='/uploads/default.jpg'">` : 
+                                `<div class="product-image-preview" style="background: linear-gradient(135deg, #8B5CF6, #EC4899); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">🖼️</div>`
+                            }
+                            <div class="product-info">
+                                <div class="product-name">${escapeHtml(product.name)}</div>
+                                <div class="product-price">₨ ${product.price.toLocaleString()}</div>
+                                <div class="product-desc">${escapeHtml(product.description.substring(0, 60))}${product.description.length > 60 ? '...' : ''}</div>
+                                <small style="color: #999;">Stock: ${product.stock || 10} | ${product.category || 'General'}</small>
+                            </div>
                         </div>
                         <button class="delete-btn" onclick="deleteProduct('${product._id}')">
                             <i class="fas fa-trash"></i> Delete
@@ -438,16 +493,38 @@
             }
         }
         
-        // Add product
+        // Add product with image upload
         document.getElementById('productForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            
+            showMessage('Adding product...', 'success');
+            
+            // First upload image if selected
+            const imageFile = document.getElementById('image').files[0];
+            if (imageFile) {
+                const formData = new FormData();
+                formData.append('image', imageFile);
+                
+                try {
+                    const uploadRes = await fetch('/api/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const uploadData = await uploadRes.json();
+                    uploadedImageUrl = uploadData.imageUrl;
+                } catch (error) {
+                    showMessage('❌ Image upload failed', 'error');
+                    return;
+                }
+            }
             
             const product = {
                 name: document.getElementById('name').value,
                 price: parseFloat(document.getElementById('price').value),
                 description: document.getElementById('description').value,
                 category: document.getElementById('category').value,
-                stock: parseInt(document.getElementById('stock').value)
+                stock: parseInt(document.getElementById('stock').value),
+                imageUrl: uploadedImageUrl || '/uploads/default.jpg'
             };
             
             try {
@@ -462,6 +539,8 @@
                 if (response.ok) {
                     showMessage('✅ Product added successfully!', 'success');
                     document.getElementById('productForm').reset();
+                    document.getElementById('imagePreview').innerHTML = '';
+                    uploadedImageUrl = '';
                     loadProducts();
                     updateStats();
                 } else {
