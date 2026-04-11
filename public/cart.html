@@ -13,6 +13,7 @@
             --light: #F9FAFB;
             --success: #10B981;
             --danger: #EF4444;
+            --warning: #F59E0B;
         }
 
         * {
@@ -166,6 +167,10 @@
             border-bottom: 1px solid #E5E7EB;
         }
 
+        .summary-row.discount {
+            color: var(--success);
+        }
+
         .summary-row.total {
             border-top: 2px solid var(--primary);
             border-bottom: none;
@@ -174,6 +179,49 @@
             margin-top: 0.5rem;
             padding-top: 1rem;
         }
+
+        /* Discount Section */
+        .discount-section {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #fef3c7;
+            border-radius: 10px;
+        }
+
+        .discount-section h4 {
+            margin-bottom: 0.5rem;
+            color: #92400e;
+        }
+
+        .discount-input-group {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .discount-input-group input {
+            flex: 1;
+            padding: 0.5rem;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .apply-coupon-btn {
+            background: #92400e;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .coupon-message {
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .coupon-message.success { color: #059669; }
+        .coupon-message.error { color: #dc2626; }
 
         .checkout-btn {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
@@ -346,6 +394,7 @@
         }
 
         let currentCart = [];
+        let appliedDiscount = null;
 
         function loadCart() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -390,7 +439,8 @@
             });
             
             const shipping = subtotal > 0 ? 199 : 0;
-            const total = subtotal + shipping;
+            let discountAmount = appliedDiscount ? appliedDiscount.discountAmount : 0;
+            let finalTotal = subtotal + shipping - discountAmount;
             
             cartContent.innerHTML = `
                 <div class="cart-grid">
@@ -407,11 +457,27 @@
                             <span>Shipping</span>
                             <span>₨ ${shipping.toLocaleString()}</span>
                         </div>
+                        ${discountAmount > 0 ? `
+                            <div class="summary-row discount">
+                                <span>Discount (${appliedDiscount.discountCode})</span>
+                                <span>- ₨ ${discountAmount.toLocaleString()}</span>
+                            </div>
+                        ` : ''}
                         <div class="summary-row total">
                             <span>Total</span>
-                            <span>₨ ${total.toLocaleString()}</span>
+                            <span>₨ ${finalTotal.toLocaleString()}</span>
                         </div>
                     </div>
+                </div>
+                
+                <!-- Discount/Coupon Section -->
+                <div class="discount-section">
+                    <h4><i class="fas fa-tag"></i> Have a Coupon Code?</h4>
+                    <div class="discount-input-group">
+                        <input type="text" id="couponCode" placeholder="Enter coupon code">
+                        <button class="apply-coupon-btn" onclick="applyCoupon()">Apply</button>
+                    </div>
+                    <div id="couponMessage" class="coupon-message"></div>
                 </div>
                 
                 <!-- Payment Section -->
@@ -447,6 +513,44 @@
             updateCartCount();
         }
         
+        // Apply coupon code
+        async function applyCoupon() {
+            const code = document.getElementById('couponCode').value.trim().toUpperCase();
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const messageDiv = document.getElementById('couponMessage');
+            
+            if (!code) {
+                messageDiv.innerHTML = 'Please enter a coupon code';
+                messageDiv.className = 'coupon-message error';
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/discounts/validate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code, subtotal })
+                });
+                
+                const result = await response.json();
+                
+                if (result.valid) {
+                    appliedDiscount = result;
+                    messageDiv.innerHTML = `✅ Coupon applied! You saved ₨ ${result.discountAmount.toLocaleString()}`;
+                    messageDiv.className = 'coupon-message success';
+                    loadCart(); // Reload cart to show discount
+                } else {
+                    messageDiv.innerHTML = `❌ ${result.message}`;
+                    messageDiv.className = 'coupon-message error';
+                    appliedDiscount = null;
+                }
+            } catch (error) {
+                messageDiv.innerHTML = '❌ Error applying coupon. Please try again.';
+                messageDiv.className = 'coupon-message error';
+            }
+        }
+        
         function updateQuantity(index, change) {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             const newQuantity = cart[index].quantity + change;
@@ -458,6 +562,7 @@
             }
             
             localStorage.setItem('cart', JSON.stringify(cart));
+            appliedDiscount = null; // Reset discount when cart changes
             loadCart();
         }
         
@@ -465,6 +570,7 @@
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
             cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
+            appliedDiscount = null; // Reset discount when cart changes
             loadCart();
         }
         
@@ -476,9 +582,10 @@
                 return;
             }
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const shipping = 199;
-            const grandTotal = total + shipping;
+            const discount = appliedDiscount ? appliedDiscount.discountAmount : 0;
+            const grandTotal = subtotal + shipping - discount;
             
             const name = prompt('Enter your full name:', '');
             if (!name) return;
@@ -494,7 +601,7 @@
             const address = prompt('Enter your complete delivery address:', 'House No, Street, City');
             if (!address) return;
             
-            const confirmMsg = `📦 CONFIRM ORDER\n\nName: ${name}\nPhone: ${phoneNumber}\nAddress: ${address}\nTotal: ₨ ${grandTotal}\n\nPayment: Cash on Delivery\n\nClick OK to place your order.`;
+            const confirmMsg = `📦 CONFIRM ORDER\n\nName: ${name}\nPhone: ${phoneNumber}\nAddress: ${address}\nSubtotal: ₨ ${subtotal}\nShipping: ₨ ${shipping}\n${discount > 0 ? `Discount: -₨ ${discount}\n` : ''}Total: ₨ ${grandTotal}\n\nPayment: Cash on Delivery\n\nClick OK to place your order.`;
             
             if (!confirm(confirmMsg)) return;
             
@@ -502,6 +609,10 @@
             const order = {
                 id: orderId,
                 items: cart,
+                subtotal: subtotal,
+                shipping: shipping,
+                discount: discount,
+                discountCode: appliedDiscount ? appliedDiscount.discountCode : null,
                 total: grandTotal,
                 date: new Date().toISOString(),
                 status: 'pending',
@@ -514,6 +625,7 @@
             localStorage.setItem('orders', JSON.stringify(orders));
             
             localStorage.removeItem('cart');
+            appliedDiscount = null;
             
             alert(`✅ ORDER PLACED!\n\nOrder ID: ${orderId}\nPay ₨ ${grandTotal} on delivery\n\nDelivery in 2-3 business days.`);
             
@@ -528,9 +640,10 @@
                 return;
             }
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const shipping = 199;
-            const grandTotal = total + shipping;
+            const discount = appliedDiscount ? appliedDiscount.discountAmount : 0;
+            const grandTotal = subtotal + shipping - discount;
             
             const phoneNumber = prompt('Enter your JazzCash mobile number:', '03XXXXXXXXX');
             if (!phoneNumber) return;
@@ -546,6 +659,10 @@
             const order = {
                 id: orderId,
                 items: cart,
+                subtotal: subtotal,
+                shipping: shipping,
+                discount: discount,
+                discountCode: appliedDiscount ? appliedDiscount.discountCode : null,
                 total: grandTotal,
                 date: new Date().toISOString(),
                 status: 'pending',
@@ -557,6 +674,7 @@
             localStorage.setItem('orders', JSON.stringify(orders));
             
             localStorage.removeItem('cart');
+            appliedDiscount = null;
             
             setTimeout(() => {
                 window.location.href = '/orders.html';
@@ -571,9 +689,10 @@
                 return;
             }
             
-            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const shipping = 199;
-            const grandTotal = total + shipping;
+            const discount = appliedDiscount ? appliedDiscount.discountAmount : 0;
+            const grandTotal = subtotal + shipping - discount;
             
             const phoneNumber = prompt('Enter your EasyPaisa mobile number:', '03XXXXXXXXX');
             if (!phoneNumber) return;
@@ -589,6 +708,10 @@
             const order = {
                 id: orderId,
                 items: cart,
+                subtotal: subtotal,
+                shipping: shipping,
+                discount: discount,
+                discountCode: appliedDiscount ? appliedDiscount.discountCode : null,
                 total: grandTotal,
                 date: new Date().toISOString(),
                 status: 'pending',
@@ -600,6 +723,7 @@
             localStorage.setItem('orders', JSON.stringify(orders));
             
             localStorage.removeItem('cart');
+            appliedDiscount = null;
             
             setTimeout(() => {
                 window.location.href = '/orders.html';
