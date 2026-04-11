@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+const multer = require("multer");
 
 const app = express();
 
@@ -11,15 +12,105 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Import Routes
+// ============================================
+// IMAGE UPLOAD CONFIGURATION
+// ============================================
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads/')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + path.extname(file.originalname));
+    }
+});
+
+const fileFilter = (req, file, cb) => {
+    const allowedTypes = /jpeg|jpg|png|gif|webp/;
+    const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = allowedTypes.test(file.mimetype);
+    
+    if (mimetype && extname) {
+        return cb(null, true);
+    } else {
+        cb(new Error('Only images are allowed'));
+    }
+};
+
+const upload = multer({ 
+    storage: storage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit
+    fileFilter: fileFilter
+});
+
+// Serve uploaded images
+app.use('/uploads', express.static('public/uploads'));
+
+// ============================================
+// IMPORT ROUTES
+// ============================================
 const userRoutes = require("./routes/userRoutes");
 const productRoutes = require("./routes/productRoutes");
+const paymentRoutes = require("./routes/paymentRoutes");
+const discountRoutes = require("./routes/discountRoutes");
 
-// Use Routes
+// ============================================
+// USE ROUTES
+// ============================================
 app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/payments", paymentRoutes);
+app.use("/api/discounts", discountRoutes);
 
-// Serve HTML Pages
+// ============================================
+// IMAGE UPLOAD ROUTE
+// ============================================
+app.post('/api/upload', upload.single('image'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+    res.json({ 
+        imageUrl: `/uploads/${req.file.filename}`,
+        message: 'Image uploaded successfully'
+    });
+});
+
+// ============================================
+// SEARCH & FILTER API ENDPOINTS
+// ============================================
+
+// Search products by name, description, or category
+app.get('/api/products/search/:query', async (req, res) => {
+    try {
+        const Product = require("./models/Product");
+        const searchQuery = req.params.query;
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: searchQuery, $options: 'i' } },
+                { description: { $regex: searchQuery, $options: 'i' } },
+                { category: { $regex: searchQuery, $options: 'i' } }
+            ]
+        });
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// Get products by category
+app.get('/api/products/category/:category', async (req, res) => {
+    try {
+        const Product = require("./models/Product");
+        const products = await Product.find({ category: req.params.category });
+        res.json(products);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// ============================================
+// SERVE HTML PAGES
+// ============================================
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "login.html"));
 });
@@ -48,60 +139,38 @@ app.get("/admin.html", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "admin.html"));
 });
 
-// DEBUG: Show what we have
-console.log("=== MONGODB DEBUG ===");
-console.log("MONGODB_URI exists:", !!process.env.MONGODB_URI);
-console.log("MONGODB_URI length:", process.env.MONGODB_URI ? process.env.MONGODB_URI.length : 0);
-console.log("DB_NAME:", process.env.DB_NAME);
-
-// Test route to check MongoDB status
-app.get("/api/db-status", async (req, res) => {
-    try {
-        const status = mongoose.connection.readyState;
-        const states = {
-            0: 'disconnected',
-            1: 'connected',
-            2: 'connecting',
-            3: 'disconnecting'
-        };
-        res.json({ 
-            status: states[status],
-            mongodb_uri_exists: !!process.env.MONGODB_URI,
-            db_name: process.env.DB_NAME
-        });
-    } catch (err) {
-        res.json({ error: err.message });
-    }
+app.get("/admin-orders.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "admin-orders.html"));
 });
 
-// MongoDB Connection
-const MONGODB_URI = process.env.MONGODB_URI;
-const DB_NAME = process.env.DB_NAME || "embroideryDB";
+app.get("/admin-discounts.html", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "admin-discounts.html"));
+});
 
-if (MONGODB_URI) {
-    console.log("Attempting connection to:", MONGODB_URI.substring(0, 30) + "...");
-    
-    // Try without database name first
-    mongoose.connect(MONGODB_URI)
-        .then(() => {
-            console.log("✅✅✅ DATABASE CONNECTED! ✅✅✅");
-            // Then switch to the specific database
-            const db = mongoose.connection.db;
-            db.command({ ping: 1 }).then(() => {
-                console.log("Database ping successful");
-            });
-        })
-        .catch(err => {
-            console.error("❌ DB Error:", err.message);
-            console.error("Full error:", err);
-        });
-} else {
-    console.log("⚠️ No MONGODB_URI found");
-}
+// ============================================
+// MONGODB CONNECTION
+// ============================================
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/embroideryDB";
 
-const PORT = process.env.PORT || 8080;
+mongoose.connect(MONGODB_URI)
+.then(() => {
+    console.log("✅ MongoDB Connected Successfully");
+})
+.catch(err => {
+    console.log("❌ MongoDB Connection Error:", err);
+});
+
+// ============================================
+// START SERVER
+// ============================================
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, '0.0.0.0', () => {
-    console.log(`🚀 Server on port ${PORT}`);
-    console.log(`🌐 https://embroidery-website-node-production.up.railway.app`);
-    console.log(`🔍 Test DB: /api/db-status`);
+    console.log(`🚀 Server running on port ${PORT}`);
+    console.log(`📍 http://localhost:${PORT}/login.html`);
+    console.log(`📋 Admin Panel: http://localhost:${PORT}/admin.html`);
+    console.log(`📦 Admin Orders: http://localhost:${PORT}/admin-orders.html`);
+    console.log(`🏷️ Admin Discounts: http://localhost:${PORT}/admin-discounts.html`);
+    console.log(`🛒 Shopping Cart: http://localhost:${PORT}/cart.html`);
+    console.log(`📦 My Orders: http://localhost:${PORT}/orders.html`);
+    console.log(`🔍 Search API: http://localhost:${PORT}/api/products/search/:query`);
 });
