@@ -766,13 +766,46 @@
         // Initialize
         loadProducts();
     </script>
-    <!-- Include Chat Widget -->
+<!-- Super Simple WhatsApp Chat - 100% Working -->
+<style>
+    .whatsapp-float {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background: #25D366;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transition: all 0.3s;
+        text-decoration: none;
+    }
+    .whatsapp-float:hover {
+        transform: scale(1.1);
+    }
+    .whatsapp-float i {
+        font-size: 35px;
+        color: white;
+    }
+</style>
+
+<!-- Direct WhatsApp Link - Replace NUMBER with your WhatsApp number -->
+<a href="https://wa.me/923117877122?text=Assalam%20o%20Alaikum!%20I%20have%20a%20question%20about%20your%20products." 
+   class="whatsapp-float" 
+   target="_blank"
+   id="whatsappDirectLink">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
 <script>
-    fetch('/chat-widget.html')
-        .then(response => response.text())
-        .then(data => {
-            document.body.insertAdjacentHTML('beforeend', data);
-        });
+    // Just to confirm the link works
+    console.log("WhatsApp direct link added!");
+    console.log("Link URL:", document.getElementById('whatsappDirectLink')?.href);
 </script>
 </body>
 </html>
