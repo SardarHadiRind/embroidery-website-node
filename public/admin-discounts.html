@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Discount Codes</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: #f5f5f5; padding: 2rem; }
+        .container { max-width: 800px; margin: 0 auto; background: white; border-radius: 15px; padding: 2rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        input, select { width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 5px; }
+        button { background: #8B5CF6; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 5px; cursor: pointer; }
+        .discount-list { margin-top: 2rem; }
+        .discount-item { background: #f9f9f9; padding: 1rem; margin-bottom: 1rem; border-radius: 5px; }
+        .delete-btn { background: #dc3545; margin-left: 1rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏷️ Create Discount Code</h1>
+        <form id="discountForm">
+            <div class="form-group">
+                <label>Coupon Code</label>
+                <input type="text" id="code" placeholder="e.g., SAVE20" required>
+            </div>
+            <div class="form-group">
+                <label>Type</label>
+                <select id="type">
+                    <option value="percentage">Percentage (%)</option>
+                    <option value="fixed">Fixed Amount (₨)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Value</label>
+                <input type="number" id="value" placeholder="e.g., 20 for 20%" required>
+            </div>
+            <div class="form-group">
+                <label>Minimum Order (₨)</label>
+                <input type="number" id="minOrder" value="0">
+            </div>
+            <div class="form-group">
+                <label>Valid From</label>
+                <input type="datetime-local" id="validFrom" required>
+            </div>
+            <div class="form-group">
+                <label>Valid To</label>
+                <input type="datetime-local" id="validTo" required>
+            </div>
+            <div class="form-group">
+                <label>Usage Limit</label>
+                <input type="number" id="usageLimit" value="100">
+            </div>
+            <button type="submit">Create Discount Code</button>
+        </form>
+        
+        <div class="discount-list">
+            <h2>Active Discounts</h2>
+            <div id="discountsList"></div>
+        </div>
+    </div>
+    <script>
+        // Add discount management logic here
+    </script>
+</body>
+</html>
