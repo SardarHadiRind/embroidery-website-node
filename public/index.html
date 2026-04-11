@@ -1,10 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EmbroideryStore.pk - Premium Handcrafted Embroidery</title>
+    <title>EmbroideryClothing - Premium Handcrafted Embroidery in Pakistan</title>
+    <meta name="description" content="Shop premium handcrafted embroidery clothing in Pakistan. Traditional dupattas, modern designs, and custom embroidery. Free shipping on orders over ₨ 2,500.">
+    <meta name="keywords" content="embroidery, traditional clothing, Pakistani embroidery, dupatta, handcrafted, ethnic wear, Pakistan, embroidered suits, wedding dresses, formal wear">
+    <meta name="author" content="EmbroideryClothing">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <link rel="canonical" href="https://embroideryclothing.up.railway.app">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://embroideryclothing.up.railway.app">
+    <meta property="og:title" content="EmbroideryClothing - Premium Handcrafted Embroidery in Pakistan">
+    <meta property="og:description" content="Shop premium handcrafted embroidery clothing in Pakistan. Traditional designs, modern styles, and custom embroidery. Free shipping on orders over ₨ 2,500.">
+    <meta property="og:image" content="https://embroideryclothing.up.railway.app/images/logo.jpg">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://embroideryclothing.up.railway.app">
+    <meta property="twitter:title" content="EmbroideryClothing - Premium Handcrafted Embroidery">
+    <meta property="twitter:description" content="Shop premium handcrafted embroidery clothing in Pakistan.">
+    
+    <!-- Structured Data / JSON-LD -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "OnlineStore",
+        "name": "EmbroideryClothing",
+        "url": "https://embroideryclothing.up.railway.app",
+        "logo": "https://embroideryclothing.up.railway.app/images/logo.jpg",
+        "description": "Premium handcrafted embroidery clothing in Pakistan",
+        "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Lahore",
+            "addressCountry": "PK"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+92-300-1234567",
+            "contactType": "customer service",
+            "availableLanguage": ["English", "Urdu"]
+        },
+        "paymentAccepted": ["Cash on Delivery", "JazzCash", "EasyPaisa"],
+        "priceRange": "₨ 500 - ₨ 10,000",
+        "sameAs": [
+            "https://www.facebook.com/embroideryclothing",
+            "https://www.instagram.com/embroideryclothing"
+        ]
+    }
+    </script>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -16,6 +64,8 @@
             --success: #10B981;
             --danger: #EF4444;
             --warning: #F59E0B;
+            --gray: #6B7280;
+            --gray-light: #E5E7EB;
         }
 
         * {
@@ -28,7 +78,14 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: var(--light);
             color: var(--dark);
+            line-height: 1.5;
         }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--gray-light); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
 
         /* Navbar */
         .navbar {
@@ -75,7 +132,7 @@
 
         .search-container input {
             padding: 0.5rem 1rem;
-            border: 1px solid #ddd;
+            border: 1px solid var(--gray-light);
             border-radius: 25px;
             width: 250px;
             font-size: 0.9rem;
@@ -157,11 +214,26 @@
             color: white;
             padding: 4rem 2rem;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="20" r="3" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="80" r="4" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            opacity: 0.3;
         }
 
         .hero-content {
             max-width: 800px;
             margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
 
         .hero h1 {
@@ -174,6 +246,7 @@
             font-size: 1.2rem;
             margin-bottom: 2rem;
             opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.1s both;
         }
 
         .hero-btn {
@@ -186,10 +259,22 @@
             font-weight: bold;
             cursor: pointer;
             transition: transform 0.3s;
+            animation: fadeInUp 0.8s ease 0.2s both;
         }
 
         .hero-btn:hover {
             transform: translateY(-3px);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Categories */
@@ -209,11 +294,29 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .category-card:hover::before {
+            left: 100%;
         }
 
         .category-card:hover {
             transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
         }
 
         .category-card i {
@@ -281,6 +384,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
         }
 
         .product-image i {
@@ -297,6 +405,7 @@
             padding: 0.25rem 0.75rem;
             border-radius: 50px;
             font-size: 0.8rem;
+            font-weight: bold;
         }
 
         .product-badge.hot {
@@ -333,6 +442,34 @@
             line-height: 1.4;
         }
 
+        /* Variant Selector */
+        .variant-selector {
+            margin: 10px 0;
+        }
+
+        .variant-selector label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .variant-selector select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray-light);
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .variant-selector select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
         .add-to-cart {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -342,7 +479,12 @@
             width: 100%;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .add-to-cart:hover {
@@ -359,6 +501,56 @@
             font-size: 3rem;
             color: var(--primary);
             margin-bottom: 1rem;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem;
+            grid-column: 1/-1;
+        }
+
+        .spinner {
+            border: 3px solid var(--gray-light);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 10px;
+            z-index: 1100;
+            animation: slideIn 0.3s ease;
+            display: none;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
 
         /* Footer */
@@ -409,63 +601,6 @@
             border-top: 1px solid rgba(255,255,255,0.1);
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Loading Spinner */
-        .loading-spinner {
-            text-align: center;
-            padding: 3rem;
-        }
-
-        .spinner {
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid var(--primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--success);
-            color: white;
-            padding: 1rem 1.5rem;
-            border-radius: 10px;
-            z-index: 1100;
-            animation: slideIn 0.3s ease;
-            display: none;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2rem;
@@ -475,6 +610,7 @@
             }
             .section-header {
                 flex-direction: column;
+                text-align: center;
             }
             .search-container {
                 width: 100%;
@@ -482,6 +618,9 @@
             }
             .search-container input {
                 flex: 1;
+            }
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             }
         }
     </style>
@@ -491,7 +630,7 @@
     <nav class="navbar">
         <div class="nav-container">
             <a href="/index.html" class="logo">
-                <i class="fas fa-feather-alt"></i> EmbroideryStore.pk
+                <i class="fas fa-feather-alt"></i> EmbroideryClothing.pk
             </a>
             <div class="search-container">
                 <input type="text" id="searchInput" placeholder="Search products..." onkeyup="searchProducts()">
@@ -566,7 +705,7 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3><i class="fas fa-feather-alt"></i> EmbroideryStore.pk</h3>
+                <h3><i class="fas fa-feather-alt"></i> EmbroideryClothing.pk</h3>
                 <p>Premium handcrafted embroidery products made with love and tradition.</p>
                 <div class="social-links">
                     <a href="#"><i class="fab fa-facebook"></i></a>
@@ -580,13 +719,13 @@
             </div>
             <div class="footer-section">
                 <h3>Contact Us</h3>
-                <p><i class="fas fa-envelope"></i> info@embroiderystore.pk<br>
+                <p><i class="fas fa-envelope"></i> info@embroideryclothing.pk<br>
                 <i class="fas fa-phone"></i> +92 300 1234567<br>
                 <i class="fas fa-map-marker-alt"></i> Lahore, Pakistan</p>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>&copy; 2024 EmbroideryStore.pk - All Rights Reserved</p>
+            <p>&copy; 2024 EmbroideryClothing.pk - All Rights Reserved</p>
         </div>
     </footer>
 
@@ -595,7 +734,248 @@
         <i class="fas fa-check-circle"></i> <span id="toastMessage">Added to cart!</span>
     </div>
 
+    <!-- Chat Widget Styles -->
+    <style>
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .chat-button:hover {
+            transform: scale(1.1);
+        }
+
+        .chat-button i {
+            font-size: 30px;
+            color: white;
+            pointer-events: none;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        .chat-window {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: slideIn 0.3s ease;
+            z-index: 10000;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #128C7E, #075E54);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h4 {
+            margin: 0;
+            font-size: 16px;
+        }
+
+        .chat-header h4 i {
+            margin-right: 8px;
+        }
+
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background: #ECE5DD;
+        }
+
+        .message {
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message.customer {
+            align-items: flex-end;
+        }
+
+        .message.support {
+            align-items: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 80%;
+            padding: 10px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message.customer .message-bubble {
+            background: #DCF8C6;
+            color: #1F2C3C;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.support .message-bubble {
+            background: white;
+            color: #1F2C3C;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-time {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+            padding: 0 5px;
+        }
+
+        .chat-input-area {
+            padding: 10px;
+            background: white;
+            display: flex;
+            gap: 10px;
+            border-top: 1px solid #ddd;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chat-input-area button {
+            background: #25D366;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .chat-input-area button:hover {
+            background: #128C7E;
+        }
+
+        .chat-info {
+            background: #F0F0F0;
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 8px 15px;
+            font-size: 12px;
+            color: #666;
+            font-style: italic;
+        }
+
+        @media (max-width: 480px) {
+            .chat-window {
+                width: calc(100% - 40px);
+                right: 20px;
+                left: 20px;
+                height: 60vh;
+            }
+        }
+    </style>
+
+    <!-- Chat Widget HTML -->
+    <div class="chat-widget">
+        <div class="chat-button" id="chatButton">
+            <i class="fab fa-whatsapp"></i>
+        </div>
+        
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <h4><i class="fab fa-whatsapp"></i> Customer Support</h4>
+                <button class="close-chat" id="closeChatButton">×</button>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="message support">
+                    <div class="message-bubble">
+                        👋 Salam! Welcome to EmbroideryClothing!<br>
+                        Ask us anything about our products, shipping, or returns. We're here to help!
+                    </div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                Support is typing...
+            </div>
+            
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Type your question..." onkeypress="handleChatKeyPress(event)">
+                <button id="sendChatButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="chat-info">
+                <i class="fas fa-clock"></i> We usually respond within 5-10 minutes
+            </div>
+        </div>
+    </div>
+
     <script>
+        // ============================================
+        // MAIN STORE FUNCTIONS
+        // ============================================
+        
         let allProducts = [];
         let currentFilter = 'all';
         let currentSearchQuery = '';
@@ -609,8 +989,10 @@
         // Show user name
         const userData = localStorage.getItem('user');
         if (userData) {
-            const user = JSON.parse(userData);
-            document.getElementById('userName').textContent = user.name || 'Customer';
+            try {
+                const user = JSON.parse(userData);
+                document.getElementById('userName').textContent = user.name || 'Customer';
+            } catch(e) {}
         }
 
         // Search products function
@@ -619,7 +1001,6 @@
             currentSearchQuery = query;
             
             if (query.length === 0) {
-                // If search is empty, show all products based on current filter
                 filterProducts(currentFilter);
                 return;
             }
@@ -664,7 +1045,7 @@
             }
         }
 
-        // Display products with images
+        // Display products with variants
         function displayProducts(products) {
             const container = document.getElementById('productsGrid');
             
@@ -678,29 +1059,105 @@
                 return;
             }
             
-            container.innerHTML = products.map(product => `
-                <div class="product-card">
-                    <div class="product-image">
-                        ${product.imageUrl && product.imageUrl !== '/uploads/default.jpg' ? 
-                            `<img src="${product.imageUrl}" alt="${escapeHtml(product.name)}" onerror="this.src='/uploads/default.jpg'">` : 
-                            `<i class="fas fa-tshirt"></i>`
-                        }
-                        ${product.stock < 5 ? '<span class="product-badge">Low Stock</span>' : ''}
-                        ${product.stock > 50 ? '<span class="product-badge hot">Hot 🔥</span>' : ''}
-                    </div>
-                    <div class="product-info">
-                        <div class="product-title">${escapeHtml(product.name)}</div>
-                        <div class="product-category">
-                            <i class="fas fa-tag"></i> ${product.category || 'General'}
+            container.innerHTML = products.map(product => {
+                let variantHtml = '';
+                let selectedPrice = product.price;
+                let selectedVariant = '';
+                
+                if (product.hasVariants && product.variants && product.variants.length > 0) {
+                    variantHtml = `
+                        <div class="variant-selector">
+                            <label>Select Variant:</label>
+                            <select id="variant-${product._id}" onchange="updateVariantPrice('${product._id}')">
+                                ${product.variants.map(v => `
+                                    <option value='${JSON.stringify(v)}' data-price="${v.price}" data-name="${v.name}">
+                                        ${v.name} - ₨ ${v.price.toLocaleString()}
+                                    </option>
+                                `).join('')}
+                            </select>
                         </div>
-                        <div class="product-price">₨ ${product.price.toLocaleString()}</div>
-                        <div class="product-description">${escapeHtml(product.description.substring(0, 100))}${product.description.length > 100 ? '...' : ''}</div>
-                        <button class="add-to-cart" onclick="addToCart('${product._id}', '${escapeHtml(product.name)}', ${product.price})">
-                            <i class="fas fa-shopping-cart"></i> Add to Cart
-                        </button>
+                    `;
+                    selectedPrice = product.variants[0].price;
+                    selectedVariant = product.variants[0].name;
+                }
+                
+                return `
+                    <div class="product-card">
+                        <div class="product-image">
+                            ${product.imageUrl && product.imageUrl !== '/uploads/default.jpg' ? 
+                                `<img src="${product.imageUrl}" alt="${escapeHtml(product.name)}" onerror="this.src='/uploads/default.jpg'">` : 
+                                `<i class="fas fa-tshirt"></i>`
+                            }
+                            ${product.stock < 5 ? '<span class="product-badge">Low Stock</span>' : ''}
+                            ${product.stock > 50 ? '<span class="product-badge hot">Hot 🔥</span>' : ''}
+                        </div>
+                        <div class="product-info">
+                            <div class="product-title">${escapeHtml(product.name)}</div>
+                            <div class="product-category">
+                                <i class="fas fa-tag"></i> ${product.category || 'General'}
+                            </div>
+                            <div class="product-price" id="price-${product._id}">₨ ${selectedPrice.toLocaleString()}</div>
+                            <div class="product-description">${escapeHtml(product.description.substring(0, 100))}${product.description.length > 100 ? '...' : ''}</div>
+                            ${variantHtml}
+                            <button class="add-to-cart" onclick="addToCartWithVariant('${product._id}', '${escapeHtml(product.name)}', '${selectedVariant}')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+        
+        // Update price when variant changes
+        function updateVariantPrice(productId) {
+            const select = document.getElementById(`variant-${productId}`);
+            if (select && select.value) {
+                const variant = JSON.parse(select.value);
+                const priceElement = document.getElementById(`price-${productId}`);
+                if (priceElement) {
+                    priceElement.textContent = `₨ ${variant.price.toLocaleString()}`;
+                }
+            }
+        }
+        
+        // Add to cart with variant support
+        function addToCartWithVariant(productId, productName, variantName) {
+            let price = 0;
+            let finalVariant = variantName;
+            
+            // Get selected variant price if available
+            const select = document.getElementById(`variant-${productId}`);
+            if (select && select.value) {
+                const selectedVariant = JSON.parse(select.value);
+                price = selectedVariant.price;
+                finalVariant = selectedVariant.name;
+            } else {
+                const product = allProducts.find(p => p._id === productId);
+                if (product) {
+                    price = product.price;
+                }
+            }
+            
+            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const itemName = finalVariant ? `${productName} (${finalVariant})` : productName;
+            
+            const existing = cart.find(item => item.id === productId && item.variant === finalVariant);
+            if (existing) {
+                existing.quantity++;
+            } else {
+                cart.push({ 
+                    id: productId, 
+                    name: itemName, 
+                    price: price, 
+                    quantity: 1,
+                    variant: finalVariant,
+                    originalName: productName
+                });
+            }
+            
+            localStorage.setItem('cart', JSON.stringify(cart));
+            showToast(`${itemName} added to cart!`);
+            updateCartCount();
         }
 
         // Filter products by category
@@ -717,22 +1174,6 @@
             }
         }
 
-        // Add to cart
-        function addToCart(id, name, price) {
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const existing = cart.find(item => item.id === id);
-            
-            if (existing) {
-                existing.quantity++;
-            } else {
-                cart.push({ id, name, price, quantity: 1 });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            showToast(`${name} added to cart!`);
-            updateCartCount();
-        }
-
         // Update cart count
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -744,7 +1185,7 @@
         function showToast(message) {
             const toast = document.getElementById('toast');
             document.getElementById('toastMessage').textContent = message;
-            toast.style.display = 'block';
+            toast.style.display = 'flex';
             setTimeout(() => {
                 toast.style.display = 'none';
             }, 3000);
@@ -765,384 +1206,138 @@
 
         // Initialize
         loadProducts();
-    </script>
-<!-- Chat Widget Styles and Script - Add to your index.html before closing </body> tag -->
-<style>
-    /* Chat Widget Styles */
-    .chat-widget {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 9999;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
 
-    .chat-button {
-        width: 60px;
-        height: 60px;
-        background: linear-gradient(135deg, #25D366, #128C7E);
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        transition: transform 0.3s ease;
-        animation: pulse 2s infinite;
-    }
-
-    .chat-button:hover {
-        transform: scale(1.1);
-    }
-
-    .chat-button i {
-        font-size: 30px;
-        color: white;
-        pointer-events: none;
-    }
-
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4); }
-        70% { box-shadow: 0 0 0 15px rgba(37, 211, 102, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
-    }
-
-    .chat-window {
-        position: fixed;
-        bottom: 90px;
-        right: 20px;
-        width: 350px;
-        height: 500px;
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 25px rgba(0,0,0,0.2);
-        display: none;
-        flex-direction: column;
-        overflow: hidden;
-        animation: slideIn 0.3s ease;
-        z-index: 10000;
-    }
-
-    @keyframes slideIn {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    .chat-header {
-        background: linear-gradient(135deg, #128C7E, #075E54);
-        color: white;
-        padding: 15px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .chat-header h4 {
-        margin: 0;
-        font-size: 16px;
-    }
-
-    .chat-header h4 i {
-        margin-right: 8px;
-    }
-
-    .close-chat {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 20px;
-        cursor: pointer;
-    }
-
-    .chat-messages {
-        flex: 1;
-        padding: 15px;
-        overflow-y: auto;
-        background: #ECE5DD;
-    }
-
-    .message {
-        margin-bottom: 12px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .message.customer {
-        align-items: flex-end;
-    }
-
-    .message.support {
-        align-items: flex-start;
-    }
-
-    .message-bubble {
-        max-width: 80%;
-        padding: 10px 12px;
-        border-radius: 15px;
-        font-size: 14px;
-        line-height: 1.4;
-        word-wrap: break-word;
-    }
-
-    .message.customer .message-bubble {
-        background: #DCF8C6;
-        color: #1F2C3C;
-        border-bottom-right-radius: 5px;
-    }
-
-    .message.support .message-bubble {
-        background: white;
-        color: #1F2C3C;
-        border-bottom-left-radius: 5px;
-    }
-
-    .message-time {
-        font-size: 10px;
-        color: #999;
-        margin-top: 3px;
-        padding: 0 5px;
-    }
-
-    .chat-input-area {
-        padding: 10px;
-        background: white;
-        display: flex;
-        gap: 10px;
-        border-top: 1px solid #ddd;
-    }
-
-    .chat-input-area input {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 20px;
-        outline: none;
-        font-size: 14px;
-    }
-
-    .chat-input-area button {
-        background: #25D366;
-        color: white;
-        border: none;
-        padding: 10px 15px;
-        border-radius: 20px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-
-    .chat-input-area button:hover {
-        background: #128C7E;
-    }
-
-    .chat-info {
-        background: #F0F0F0;
-        padding: 8px;
-        text-align: center;
-        font-size: 11px;
-        color: #666;
-    }
-
-    .typing-indicator {
-        display: none;
-        padding: 8px 15px;
-        font-size: 12px;
-        color: #666;
-        font-style: italic;
-    }
-
-    @media (max-width: 480px) {
-        .chat-window {
-            width: calc(100% - 40px);
-            right: 20px;
-            left: 20px;
-            height: 60vh;
-        }
-    }
-</style>
-
-<div class="chat-widget">
-    <div class="chat-button" id="chatButton">
-        <i class="fab fa-whatsapp"></i>
-    </div>
-    
-    <div class="chat-window" id="chatWindow">
-        <div class="chat-header">
-            <h4><i class="fab fa-whatsapp"></i> Customer Support</h4>
-            <button class="close-chat" id="closeChatButton">×</button>
-        </div>
+        // ============================================
+        // CHAT WIDGET FUNCTIONS
+        // ============================================
         
-        <div class="chat-messages" id="chatMessages">
-            <div class="message support">
-                <div class="message-bubble">
-                    👋 Salam! Welcome to EmbroideryClothing!<br>
-                    Ask us anything about our products, shipping, or returns. We're here to help!
-                </div>
-                <div class="message-time">Just now</div>
-            </div>
-        </div>
+        // WhatsApp number - CHANGE THIS TO YOUR NUMBER
+        const ADMIN_PHONE = '923117877122'; // Format: 92 without plus, then number
         
-        <div class="typing-indicator" id="typingIndicator">
-            Support is typing...
-        </div>
+        let chatHistory = [];
         
-        <div class="chat-input-area">
-            <input type="text" id="chatInput" placeholder="Type your question..." onkeypress="handleChatKeyPress(event)">
-            <button id="sendChatButton">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-        <div class="chat-info">
-            <i class="fas fa-clock"></i> We usually respond within 5-10 minutes
-        </div>
-    </div>
-</div>
-
-<script>
-    // Chat Configuration
-    const ADMIN_PHONE = '923117877122'; // Replace with your WhatsApp number (without +)
-    
-    let chatHistory = [];
-    
-    // DOM Elements
-    const chatButton = document.getElementById('chatButton');
-    const chatWindow = document.getElementById('chatWindow');
-    const closeChatButton = document.getElementById('closeChatButton');
-    const sendChatButton = document.getElementById('sendChatButton');
-    const chatInput = document.getElementById('chatInput');
-    
-    // Check if elements exist before adding event listeners
-    if (chatButton) {
-        chatButton.addEventListener('click', toggleChat);
-    }
-    
-    if (closeChatButton) {
-        closeChatButton.addEventListener('click', toggleChat);
-    }
-    
-    if (sendChatButton) {
-        sendChatButton.addEventListener('click', sendMessage);
-    }
-    
-    // Load chat history from localStorage
-    function loadChatHistory() {
-        const saved = localStorage.getItem('chatHistory');
-        if (saved) {
-            chatHistory = JSON.parse(saved);
-            displayMessages();
-        }
-    }
-    
-    // Save chat history
-    function saveChatHistory() {
-        localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
-    }
-    
-    // Toggle chat window
-    function toggleChat() {
-        if (chatWindow.style.display === 'flex') {
-            chatWindow.style.display = 'none';
-        } else {
-            chatWindow.style.display = 'flex';
-            loadChatHistory();
-            if (chatInput) chatInput.focus();
-        }
-    }
-    
-    // Display messages in chat
-    function displayMessages() {
-        const container = document.getElementById('chatMessages');
-        if (!container) return;
+        // DOM Elements
+        const chatButton = document.getElementById('chatButton');
+        const chatWindow = document.getElementById('chatWindow');
+        const closeChatButton = document.getElementById('closeChatButton');
+        const sendChatButton = document.getElementById('sendChatButton');
+        const chatInput = document.getElementById('chatInput');
         
-        container.innerHTML = '';
-        
-        chatHistory.forEach(msg => {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${msg.sender}`;
-            messageDiv.innerHTML = `
-                <div class="message-bubble">${escapeHtml(msg.text)}</div>
-                <div class="message-time">${msg.time}</div>
-            `;
-            container.appendChild(messageDiv);
-        });
-        
-        // Scroll to bottom
-        container.scrollTop = container.scrollHeight;
-    }
-    
-    // Send message
-    function sendMessage() {
-        const input = document.getElementById('chatInput');
-        if (!input) return;
-        
-        const message = input.value.trim();
-        if (!message) return;
-        
-        // Get user info from localStorage
-        const userData = localStorage.getItem('user');
-        let customerName = 'Customer';
-        let customerEmail = '';
-        
-        if (userData) {
-            try {
-                const user = JSON.parse(userData);
-                customerName = user.name || 'Customer';
-                customerEmail = user.email || '';
-            } catch(e) {}
+        // Event listeners
+        if (chatButton) {
+            chatButton.addEventListener('click', toggleChat);
         }
         
-        // Add customer message to chat
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (closeChatButton) {
+            closeChatButton.addEventListener('click', toggleChat);
+        }
         
-        chatHistory.push({
-            sender: 'customer',
-            text: message,
-            time: timeStr,
-            timestamp: now.getTime()
-        });
+        if (sendChatButton) {
+            sendChatButton.addEventListener('click', sendMessage);
+        }
         
-        saveChatHistory();
-        displayMessages();
-        input.value = '';
+        // Load chat history from localStorage
+        function loadChatHistory() {
+            const saved = localStorage.getItem('chatHistory');
+            if (saved) {
+                chatHistory = JSON.parse(saved);
+                displayMessages();
+            }
+        }
         
-        // Show typing indicator
-        const typingIndicator = document.getElementById('typingIndicator');
-        if (typingIndicator) typingIndicator.style.display = 'block';
+        // Save chat history
+        function saveChatHistory() {
+            localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
+        }
         
-        // Send notification to admin
-        notifyAdmin(message, customerName, customerEmail);
+        // Toggle chat window
+        function toggleChat() {
+            if (chatWindow.style.display === 'flex') {
+                chatWindow.style.display = 'none';
+            } else {
+                chatWindow.style.display = 'flex';
+                loadChatHistory();
+                if (chatInput) chatInput.focus();
+            }
+        }
         
-        // Simulate auto-reply
-        setTimeout(() => {
-            if (typingIndicator) typingIndicator.style.display = 'none';
+        // Display messages in chat
+        function displayMessages() {
+            const container = document.getElementById('chatMessages');
+            if (!container) return;
             
-            const autoReply = getAutoReply(message);
-            const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            if (chatHistory.length === 0) {
+                container.innerHTML = `
+                    <div class="message support">
+                        <div class="message-bubble">
+                            👋 Salam! Welcome to EmbroideryClothing!<br>
+                            Ask us anything about our products, shipping, or returns. We're here to help!
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            chatHistory.forEach(msg => {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${msg.sender}`;
+                messageDiv.innerHTML = `
+                    <div class="message-bubble">${escapeHtml(msg.text)}</div>
+                    <div class="message-time">${msg.time}</div>
+                `;
+                container.appendChild(messageDiv);
+            });
+            
+            // Scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+        
+        // Send message
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            if (!input) return;
+            
+            const message = input.value.trim();
+            if (!message) return;
+            
+            // Get user info from localStorage
+            const userData = localStorage.getItem('user');
+            let customerName = 'Customer';
+            let customerEmail = '';
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    customerName = user.name || 'Customer';
+                    customerEmail = user.email || '';
+                } catch(e) {}
+            }
+            
+            // Add customer message to chat
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             
             chatHistory.push({
-                sender: 'support',
-                text: autoReply,
-                time: replyTime,
-                timestamp: Date.now()
+                sender: 'customer',
+                text: message,
+                time: timeStr,
+                timestamp: now.getTime()
             });
             
             saveChatHistory();
             displayMessages();
-        }, 2000);
-    }
-    
-    // Notify admin via WhatsApp
-    function notifyAdmin(message, customerName, customerEmail) {
-        const currentUrl = window.location.href;
-        
-        // WhatsApp message format
-        const whatsappMsg = `🪡 *New Chat Message from EmbroideryClothing*
+            input.value = '';
+            
+            // Show typing indicator
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) typingIndicator.style.display = 'block';
+            
+            // Send notification to admin via WhatsApp
+            const currentUrl = window.location.href;
+            const whatsappMsg = `🪡 *New Chat Message from EmbroideryClothing*
 
 👤 *Customer:* ${customerName}
 📧 *Email:* ${customerEmail || 'Not logged in'}
@@ -1153,92 +1348,125 @@
 
 ---
 Reply to this message to respond to the customer.`;
+            
+            const encodedMsg = encodeURIComponent(whatsappMsg);
+            const whatsappUrl = `https://wa.me/${ADMIN_PHONE}?text=${encodedMsg}`;
+            
+            // Open WhatsApp in new tab (optional - comment if annoying)
+            // window.open(whatsappUrl, '_blank');
+            
+            console.log('Admin would be notified at:', whatsappUrl);
+            
+            // Save notification for admin panel
+            saveNotification(customerName, message, customerEmail, currentUrl);
+            
+            // Simulate auto-reply
+            setTimeout(() => {
+                if (typingIndicator) typingIndicator.style.display = 'none';
+                
+                const autoReply = getAutoReply(message);
+                const replyTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                chatHistory.push({
+                    sender: 'support',
+                    text: autoReply,
+                    time: replyTime,
+                    timestamp: Date.now()
+                });
+                
+                saveChatHistory();
+                displayMessages();
+            }, 2000);
+        }
         
-        // Encode for WhatsApp
-        const encodedMsg = encodeURIComponent(whatsappMsg);
-        const whatsappUrl = `https://wa.me/${ADMIN_PHONE}?text=${encodedMsg}`;
+        // Save notification for admin panel
+        function saveNotification(customerName, message, customerEmail, url) {
+            const notifications = JSON.parse(localStorage.getItem('chatNotifications') || '[]');
+            notifications.unshift({
+                id: Date.now(),
+                customerName: customerName,
+                customerEmail: customerEmail,
+                message: message,
+                url: url,
+                timestamp: new Date().toISOString(),
+                read: false
+            });
+            
+            // Keep only last 50 notifications
+            while (notifications.length > 50) notifications.pop();
+            
+            localStorage.setItem('chatNotifications', JSON.stringify(notifications));
+            
+            // Update badge if on admin page
+            updateAdminBadge();
+        }
         
-        // Save notification to localStorage for admin panel
-        saveNotification(customerName, message, customerEmail, currentUrl);
+        // Update admin badge
+        function updateAdminBadge() {
+            const notifications = JSON.parse(localStorage.getItem('chatNotifications') || '[]');
+            const unread = notifications.filter(n => !n.read).length;
+            const badge = document.getElementById('chatBadge');
+            if (badge) {
+                if (unread > 0) {
+                    badge.style.display = 'inline-block';
+                    badge.textContent = unread;
+                } else {
+                    badge.style.display = 'none';
+                }
+            }
+        }
         
-        console.log('Admin would be notified at:', whatsappUrl);
-    }
-    
-    // Save notification for admin panel
-    function saveNotification(customerName, message, customerEmail, url) {
-        const notifications = JSON.parse(localStorage.getItem('chatNotifications') || '[]');
-        notifications.unshift({
-            id: Date.now(),
-            customerName: customerName,
-            customerEmail: customerEmail,
-            message: message,
-            url: url,
-            timestamp: new Date().toISOString(),
-            read: false
+        // Smart auto-reply based on keywords
+        function getAutoReply(message) {
+            const msg = message.toLowerCase();
+            
+            if (msg.includes('price') || msg.includes('cost') || msg.includes('rate')) {
+                return "💰 Our prices are listed on each product page. Is there a specific product you're interested in? I can share the details!";
+            }
+            
+            if (msg.includes('shipping') || msg.includes('delivery') || msg.includes('deliver')) {
+                return "🚚 We deliver nationwide! Shipping takes 2-3 business days. Delivery charges are ₨ 199 for orders under ₨ 2,500, FREE above ₨ 2,500.";
+            }
+            
+            if (msg.includes('return') || msg.includes('refund') || msg.includes('exchange')) {
+                return "🔄 Yes, we accept returns within 7 days of delivery. The product must be unused and in original packaging. We'll arrange pickup for you!";
+            }
+            
+            if (msg.includes('size') || msg.includes('fit')) {
+                return "📏 Our products come in standard Pakistani sizes. Please check the size chart on each product page. For custom sizing, let me know your measurements!";
+            }
+            
+            if (msg.includes('order') || msg.includes('track')) {
+                return "📦 You can track your order by logging into your account and visiting 'My Orders'. Would you like me to help you check your order status?";
+            }
+            
+            if (msg.includes('payment') || msg.includes('cod') || msg.includes('card')) {
+                return "💳 We offer Cash on Delivery (COD), JazzCash, and EasyPaisa payments. All options are available at checkout!";
+            }
+            
+            if (msg.includes('hello') || msg.includes('salam') || msg.includes('hi') || msg.includes('assalam')) {
+                return "Wa Alaikum Assalam! 👋 Welcome to EmbroideryClothing! How can I help you today? You can ask about products, prices, shipping, or anything else!";
+            }
+            
+            if (msg.includes('discount') || msg.includes('sale') || msg.includes('offer')) {
+                return "🎉 Yes! We have ongoing discounts! Check our 'Flash Sales' section or use code 'WELCOME10' for 10% off your first order!";
+            }
+            
+            return "Thank you for your message! 👋 I've noted your question and our support team will get back to you shortly. Meanwhile, you can check our FAQ or continue browsing. Is there anything specific about our products you'd like to know?";
+        }
+        
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        // Load chat history on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChatHistory();
+            updateAdminBadge();
+            console.log('Chat widget loaded successfully');
         });
-        
-        // Keep only last 50 notifications
-        while (notifications.length > 50) notifications.pop();
-        
-        localStorage.setItem('chatNotifications', JSON.stringify(notifications));
-    }
-    
-    // Smart auto-reply based on keywords
-    function getAutoReply(message) {
-        const msg = message.toLowerCase();
-        
-        if (msg.includes('price') || msg.includes('cost') || msg.includes('rate')) {
-            return "💰 Our prices are listed on each product page. Is there a specific product you're interested in? I can share the details!";
-        }
-        
-        if (msg.includes('shipping') || msg.includes('delivery') || msg.includes('deliver')) {
-            return "🚚 We deliver nationwide! Shipping takes 2-3 business days. Delivery charges are ₨ 199 for orders under ₨ 2,500, FREE above ₨ 2,500.";
-        }
-        
-        if (msg.includes('return') || msg.includes('refund') || msg.includes('exchange')) {
-            return "🔄 Yes, we accept returns within 7 days of delivery. The product must be unused and in original packaging. We'll arrange pickup for you!";
-        }
-        
-        if (msg.includes('size') || msg.includes('fit')) {
-            return "📏 Our products come in standard Pakistani sizes. Please check the size chart on each product page. For custom sizing, let me know your measurements!";
-        }
-        
-        if (msg.includes('order') || msg.includes('track')) {
-            return "📦 You can track your order by logging into your account and visiting 'My Orders'. Would you like me to help you check your order status?";
-        }
-        
-        if (msg.includes('payment') || msg.includes('cod') || msg.includes('card')) {
-            return "💳 We offer Cash on Delivery (COD), JazzCash, and EasyPaisa payments. All options are available at checkout!";
-        }
-        
-        if (msg.includes('hello') || msg.includes('salam') || msg.includes('hi') || msg.includes('assalam')) {
-            return "Wa Alaikum Assalam! 👋 Welcome to EmbroideryClothing! How can I help you today? You can ask about products, prices, shipping, or anything else!";
-        }
-        
-        if (msg.includes('discount') || msg.includes('sale') || msg.includes('offer')) {
-            return "🎉 Yes! We have ongoing discounts! Check our 'Flash Sales' section or use code 'WELCOME10' for 10% off your first order!";
-        }
-        
-        return "Thank you for your message! 👋 I've noted your question and our support team will get back to you shortly. Meanwhile, you can check our FAQ or continue browsing. Is there anything specific about our products you'd like to know?";
-    }
-    
-    function handleChatKeyPress(event) {
-        if (event.key === 'Enter') {
-            sendMessage();
-        }
-    }
-    
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-    
-    // Load chat history on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        loadChatHistory();
-        console.log('Chat widget loaded successfully');
-    });
-</script>
+    </script>
 </body>
 </html>
