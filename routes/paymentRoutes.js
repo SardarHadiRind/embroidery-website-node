@@ -1,66 +1,46 @@
 const express = require("express");
 const router = express.Router();
-const paymentService = require("../services/paymentService");
-const Order = require("../models/Order");
 
-// Initiate JazzCash payment
-router.post("/jazzcash/initiate", async (req, res) => {
+// Initialize payment (simplified version)
+router.post("/initiate", async (req, res) => {
     try {
-        const { orderId, amount, description } = req.body;
+        const { amount, orderId, paymentMethod } = req.body;
         
-        const result = await paymentService.createJazzCashPayment({
-            orderId,
-            amount,
-            description
+        console.log(`Payment initiated: ${paymentMethod} - Amount: ${amount} - Order: ${orderId}`);
+        
+        // For now, return success (you can integrate real payment gateway later)
+        res.json({ 
+            success: true, 
+            message: "Payment initiated successfully",
+            paymentUrl: "/payment-success.html",
+            orderId: orderId
         });
-        
-        res.json({ success: true, data: result });
     } catch (error) {
+        console.error("Payment error:", error);
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// Initiate EasyPaisa payment
-router.post("/easypaisa/initiate", async (req, res) => {
+// Payment callback
+router.post("/callback", async (req, res) => {
     try {
-        const { orderId, amount, mobileNumber, email, description } = req.body;
-        
-        const result = await paymentService.createEasyPaisaPayment({
-            orderId,
-            amount,
-            mobileNumber,
-            email,
-            description
-        });
-        
-        res.json({ success: true, data: result });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
-    }
-});
-
-// Payment callback handler
-router.post("/callback/:gateway", async (req, res) => {
-    try {
-        const { gateway } = req.params;
-        const paymentData = req.body;
-        
-        const isValid = paymentService.verifyPaymentCallback(paymentData, gateway);
-        
-        if (isValid) {
-            // Update order status in database
-            await Order.findOneAndUpdate(
-                { orderId: paymentData.pp_BillReference || paymentData.transactionId },
-                { status: "paid", paymentGateway: gateway }
-            );
-            
-            res.status(200).send("OK");
-        } else {
-            res.status(400).send("Invalid callback");
-        }
+        console.log("Payment callback received:", req.body);
+        res.json({ success: true });
     } catch (error) {
         console.error("Callback error:", error);
-        res.status(500).send("Error");
+        res.status(500).json({ success: false });
+    }
+});
+
+// Get payment status
+router.get("/status/:orderId", async (req, res) => {
+    try {
+        res.json({ 
+            status: "pending", 
+            message: "Payment status: Pending" 
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
 });
 
